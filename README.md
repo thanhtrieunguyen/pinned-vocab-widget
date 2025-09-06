@@ -126,13 +126,6 @@ Thêm tính năng:
 3. Logic hiển thị → `renderer/script.js`
 4. Xử lý nền / đọc file → `main.js`
 
-## Đóng góp
-
-1. Fork
-2. Tạo nhánh mới
-3. Commit thay đổi
-4. Mở Pull Request
-
 ## Giấy phép
 
 MIT – tự do sử dụng và chỉnh sửa.
