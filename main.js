@@ -3,6 +3,35 @@ const path = require('path');
 const fs = require('fs');
 const chokidar = require('chokidar');
 
+// -------------------------------------------------------------
+// Environment / configuration loading
+// - We allow overriding the vocabulary data file via environment
+//   variable (VOCAB_PATH or VOCAB_JSON) or a local .env file.
+// - This makes it explicit that this widget is a companion to the
+//   english_vocab_app repository.
+// -------------------------------------------------------------
+try {
+  const envFile = path.join(__dirname, '.env');
+  if (fs.existsSync(envFile)) {
+    const lines = fs.readFileSync(envFile, 'utf8').split(/\r?\n/);
+    for (const line of lines) {
+      if (!line || line.trim().startsWith('#')) continue;
+      const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
+      if (m) {
+        const key = m[1];
+        let value = m[2].trim();
+        // Strip optional surrounding quotes
+        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+          value = value.slice(1, -1);
+        }
+        if (!process.env[key]) process.env[key] = value;
+      }
+    }
+  }
+} catch (e) {
+  console.log('Failed to parse .env file:', e.message);
+}
+
 // Keep a global reference of the window object
 let mainWindow;
 let windowState = {
@@ -18,8 +47,22 @@ let windowState = {
   normalY: 100
 };
 
-// Vocabulary data path
-const vocabularyPath = path.join(require('os').homedir(), 'AppData', 'Roaming', 'com.example', 'english_vocab_app', 'shared_preferences.json');
+// Default vocabulary data path (Flutter shared_preferences JSON from english_vocab_app)
+const defaultVocabularyPath = path.join(require('os').homedir(), 'AppData', 'Roaming', 'com.example', 'english_vocab_app', 'shared_preferences.json');
+
+function resolveVocabularyPath() {
+  const override = process.env.VOCAB_PATH || process.env.VOCAB_JSON;
+  if (override) {
+    if (fs.existsSync(override)) {
+      return override;
+    } else {
+      console.log('[vocab] Provided VOCAB_PATH does not exist:', override);
+    }
+  }
+  return defaultVocabularyPath;
+}
+
+let vocabularyPath = resolveVocabularyPath();
 
 function createWindow() {
   // Load saved window state
@@ -122,14 +165,16 @@ function saveWindowState() {
 }
 
 function watchVocabularyFile() {
+  if (!vocabularyPath) return;
   if (fs.existsSync(vocabularyPath)) {
-    const watcher = chokidar.watch(vocabularyPath);
-    
+    const watcher = chokidar.watch(vocabularyPath, { ignoreInitial: true });
     watcher.on('change', () => {
       if (mainWindow) {
         mainWindow.webContents.send('vocabulary-updated');
       }
     });
+  } else {
+    console.log('[vocab] Vocabulary file not found at startup:', vocabularyPath);
   }
 }
 
@@ -151,43 +196,34 @@ app.on('activate', () => {
 // IPC handlers
 ipcMain.handle('get-vocabulary-data', async () => {
   try {
-    let dataFile = vocabularyPath;
-    
-    // If main vocabulary file doesn't exist, try demo file
+    // Re-resolve each request in case user created the file later or updated env
+    vocabularyPath = resolveVocabularyPath();
     if (!fs.existsSync(vocabularyPath)) {
-      const demoPath = path.join(__dirname, 'demo-vocabulary.json');
-      if (fs.existsSync(demoPath)) {
-        dataFile = demoPath;
-        console.log('Using demo vocabulary file');
-      } else {
-        return { success: false, data: null, error: 'No vocabulary file found' };
-      }
+      return { success: false, data: null, error: 'Vocabulary file not found. Open english_vocab_app to generate shared_preferences.json.' };
     }
 
-    const data = fs.readFileSync(dataFile, 'utf8');
+    const data = fs.readFileSync(vocabularyPath, 'utf8');
     const parsed = JSON.parse(data);
-    
-    // Get today's vocabulary
+
     const today = new Date().toISOString().split('T')[0];
     const todayKey = `flutter.vocabulary_data_${today}`;
-    
+
     if (parsed[todayKey]) {
       const vocabularies = JSON.parse(parsed[todayKey]);
       return { success: true, data: vocabularies };
     }
-    
-    // If no data for today, get the most recent date
+
     const dates = Object.keys(parsed)
       .filter(key => key.startsWith('flutter.vocabulary_data_'))
       .sort()
       .reverse();
-    
+
     if (dates.length > 0) {
       const vocabularies = JSON.parse(parsed[dates[0]]);
       return { success: true, data: vocabularies };
     }
-    
-    return { success: false, data: null, error: 'No vocabulary data found' };
+
+    return { success: false, data: null, error: 'No vocabulary data found in file.' };
   } catch (error) {
     return { success: false, data: null, error: error.message };
   }
