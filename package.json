@@ -1,0 +1,48 @@
+{
+  "name": "vocabulary-floating-widget",
+  "version": "1.0.0",
+  "description": "A floating vocabulary widget that displays vocabulary words with auto-rotation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never"
+  },
+  "keywords": [
+    "electron",
+    "vocabulary",
+    "widget",
+    "floating",
+    "education"
+  ],
+  "author": "Vocabulary App",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^27.3.11",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0"
+  },
+  "build": {
+    "appId": "com.vocabularyapp.floatingwidget",
+    "productName": "Vocabulary Floating Widget",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer/**/*",
+      "demo-vocabulary.json",
+      "!assets/*.png"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

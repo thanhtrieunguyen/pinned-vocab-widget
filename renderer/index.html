@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="widget-container" class="widget-container">
+        <!-- Header with controls -->
+        <div class="widget-header" id="drag-handle">
+            <div class="controls">
+                <button id="pin-btn" class="control-btn" title="Toggle Always on Top">📌</button>
+                <button id="minimize-btn" class="control-btn" title="Minimize">➖</button>
+                <button id="close-btn" class="control-btn close" title="Close">✕</button>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="widget-content" id="widget-content">
+            <div class="vocabulary-card" id="vocab-card">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Loading vocabulary...</p>
+                </div>
+                
+                <div class="vocab-content" id="vocab-content" style="display: none;">
+                    <div class="word-section">
+                        <h2 class="word" id="word">Loading...</h2>
+                        <div class="pronunciation" id="pronunciation">/ˈloʊdɪŋ/</div>
+                    </div>
+                    
+                    <div class="meaning-section single-line">
+                        <div class="meaning" id="meaning">Please wait...</div>
+                    </div>
+                </div>
+
+                <div class="error-content" id="error-content" style="display: none;">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-message">No vocabulary data found</div>
+                    <div class="error-subtitle">Make sure your Flutter app has vocabulary data</div>
+                </div>
+            </div>
+
+            <!-- Progress and controls -->
+            <div class="widget-footer" id="widget-footer">
+                <div class="progress-section">
+                    <div class="timer-display" id="timer-display">Next: 5:00</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <button class="action-btn nav-btn" id="prev-btn" title="Previous">◀</button>
+                    <button class="action-btn" id="pause-btn" title="Pause/Resume">⏸️</button>
+                    <button class="action-btn nav-btn" id="next-btn" title="Next">▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Minimized state -->
+        <div class="minimized-content" id="minimized-content" style="display: none;">
+            <div class="mini-icon">📚</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

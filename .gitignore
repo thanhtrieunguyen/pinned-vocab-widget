@@ -1,0 +1,61 @@
+# ---- Node & Electron standard ignores ----
+node_modules/
+
+# Build / packaging output
+/dist/
+/build/
+/out/
+/release/
+
+# Electron ASAR bundles
+*.asar
+
+# Crash dumps
+*.dmp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime state files (not source)
+window-state.json
+
+# Coverage / instrumentation
+coverage/
+.nyc_output/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Cache & temp
+.tmp/
+.temp/
+.cache/
+.eslintcache
+.turbo/
+
+# IDE / Editor
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*~
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Optional: Uncomment if you generate source maps you do NOT want committed
+#*.map
+
+# Lock files: keep package-lock.json (do NOT ignore) to ensure reproducible builds
+# (If you later switch to yarn/pnpm you can adjust accordingly.)
+
+# End of .gitignore

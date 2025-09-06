@@ -1,0 +1,405 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: transparent;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* Widget container */
+.widget-container {
+    background: #1e3a8a; /* Hack Não blue color */
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid #f97316; /* Hack Não orange accent */
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 4px 6px 8px; /* make overall content narrower */
+}
+
+.widget-container.minimized {
+    border-radius: 50% !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+/* Header with drag handle */
+.widget-header {
+    background: rgba(249, 115, 22, 0.2); /* Hack Não orange with transparency */
+    padding: 8px 12px;
+    border-radius: 16px 16px 0 0;
+    cursor: move;
+    -webkit-app-region: drag;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 36px;
+    border-bottom: 1px solid #f97316;
+}
+
+.controls {
+    display: flex;
+    gap: 4px;
+    -webkit-app-region: no-drag;
+}
+
+.control-btn {
+    background: rgba(249, 115, 22, 0.3); /* Hack Não orange */
+    border: 1px solid #f97316;
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: #f97316;
+    transform: scale(1.1);
+}
+
+.control-btn.close:hover {
+    background: rgba(239, 68, 68, 0.8);
+}
+
+.control-btn.active {
+    background: #f97316;
+}
+
+/* Main content */
+.widget-content {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.vocabulary-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Loading state */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    color: white;
+    text-align: center;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Vocabulary content */
+.vocab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* tighter */
+    color: white;
+}
+
+.word-section {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.word {
+    font-size: 22px; /* slightly smaller for compact width */
+    font-weight: 700;
+    margin-bottom: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.15;
+    word-break: break-word;
+}
+
+.pronunciation {
+    font-size: 13px;
+    opacity: 0.9;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.meaning-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.meaning {
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(249, 115, 22, 0.18);
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #f97316;
+}
+
+.meaning-section.single-line { gap:4px; }
+
+/* Compact adjustments after removing memory tip & example */
+.vocab-content { gap:8px; }
+.word-section { margin-bottom:4px; }
+.meaning { padding:6px 10px; font-size:15px; }
+
+/* Error state */
+.error-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    gap: 8px;
+}
+
+.error-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.error-message {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.error-subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Footer */
+.widget-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.progress-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-display {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    min-width: 60px;
+    font-weight: 500;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(249, 115, 22, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #f97316; /* Hack Não orange */
+    border-radius: 2px;
+    transition: width 1s linear;
+    width: 0%;
+}
+
+.control-section {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn {
+    background: rgba(249, 115, 22, 0.3);
+    border: 1px solid #f97316;
+    border-radius: 8px;
+    width: 40px;
+    height: 32px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:hover {
+    background: #f97316;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+/* Special styling for navigation buttons */
+.action-btn#prev-btn,
+.action-btn#next-btn {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    border: 2px solid #f97316;
+    width: 45px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.action-btn#prev-btn:hover,
+.action-btn#next-btn:hover {
+    background: linear-gradient(135deg, #ea580c, #dc2626);
+    border-color: #ea580c;
+    transform: scale(1.15);
+    box-shadow: 0 6px 12px rgba(249, 115, 22, 0.6);
+}
+
+.action-btn#pause-btn {
+    background: rgba(30, 58, 138, 0.8);
+    border: 1px solid #1e3a8a;
+}
+
+/* Minimized state */
+.minimized-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #1e3a8a; /* Hack Não blue */
+    border: 2px solid #f97316; /* Hack Não orange border */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.6);
+}
+
+.minimized-content:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.8);
+}
+
+.mini-icon {
+    font-size: 24px;
+    color: white;
+}
+
+/* Responsive adjustments */
+@media (max-height: 200px) {
+    .widget-content {
+        padding: 8px;
+    }
+    
+    .word {
+        font-size: 18px;
+    }
+    
+    .meaning {
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+    
+    /* example section removed */
+}
+
+@media (max-width: 280px) {
+    .word {
+        font-size: 20px;
+    }
+    
+    .meaning {
+        font-size: 14px;
+    }
+    
+    .controls {
+        gap: 2px;
+    }
+    
+    .control-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 9px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+    }
+    50% {
+        box-shadow: 0 6px 12px rgba(249, 115, 22, 0.8);
+    }
+    100% {
+        box-shadow: 0 4px 8px rgba(249, 115, 22, 0.4);
+    }
+}
+
+.vocab-content {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.nav-btn {
+    animation: pulse 2s infinite;
+}
+
+/* Focus states for accessibility */
+.control-btn:focus,
+.action-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
